@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   errMsg: string;
   longtitude: number;
   latitude: number;
-  distance : number;
+  distance: number;
   prevPos: Position;
   ngOnInit() {
 
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   getPos() {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition((position) => {
-        this.distance+=this.calculateDistance(this.prevPos.coords.latitude, position.coords.latitude , this.prevPos.coords.latitude, position.coords.latitude);
+        this.distance += this.calculateDistance(this.prevPos.coords.latitude, position.coords.latitude, this.prevPos.coords.latitude, position.coords.latitude);
         this.longtitude = position.coords.longitude;
         this.latitude = position.coords.latitude;
       });
@@ -40,17 +40,20 @@ export class AppComponent implements OnInit {
     }
   }
   onStart() {
-    navigator.geolocation.getCurrentPosition(x=>{
-      this.prevPos=x;
-    });
+    this.onReset();
     this.getPos();
   }
   onStop() {
   }
-  calculateDistance(lat1:number,lat2:number,long1:number,long2:number) : number {
+  onReset() {
+    navigator.geolocation.getCurrentPosition(x => {
+      this.prevPos = x;
+    });
+  }
+  calculateDistance(lat1: number, lat2: number, long1: number, long2: number): number {
     const p = 0.017453292519943295;    // Math.PI / 180
     const c = Math.cos;
-    const a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
+    const a = 0.5 - c((lat1 - lat2) * p) / 2 + c(lat2 * p) * c((lat1) * p) * (1 - c(((long1 - long2) * p))) / 2;
     const dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
     return dis;
   }
